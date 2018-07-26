@@ -1,4 +1,19 @@
+import multiprocessing
+import itertools
+import pandas as pd
+import numpy as np
+
 def multi_run_wrapper(args):
+    '''Runs a function in which the first argument is a numpy array.
+    Input:
+        args: List where first argument is the function,
+              2nd is the argument, 
+              3rd is any additional arguments.
+              
+    Returns:
+        The output of the function
+    '''
+
     curr_func = args[0]
     return curr_func(args[1], *args[2])
 
@@ -20,11 +35,6 @@ def parallel_ar(ar, func, func_args=(), num_processes=4):
     OR None if func returns None and just does some calling.
     '''
 
-    import pandas as pd
-    import multiprocessing
-    import itertools
-    import numpy as np
-
     # calculate the chunk size as an integer
     chunk_size = int(ar.shape[0] / num_processes)
 
@@ -40,26 +50,30 @@ def parallel_ar(ar, func, func_args=(), num_processes=4):
     if result[0] is None:
         return
 
-    
-    #new_x = np.zeros(result[0].shape)
-    #new_x = np.array()
-
     new_x = np.vstack(result).flatten() #Flatten out the results
-    # for i in result:
-    #     new_x = new_x + i
-
     pool.terminate()
-    return new_x, result
+    return new_x
 
 
 def parallel_df(df, func, func_args=(), num_processes=4):
     '''
-    Function to parallelize a function that loops over dataframe rows
+    Function to parallelize a function that loops over pandas DataFrame rows and adds a column.
 
+    Assumes the returned function is a DataFrame as well.
+    
+    Input: 
+    df: Numpy array
+    func: Function that is essentially the same uses a for loop the same way you would call it without a for loop. 
+          i.e do not write this function as operating on one element in your array. 
+          Also, the function should either return: a) a numpy array OR b) None. 
+    func_args: Arguments that would be used by each element in the array
+    num_processes: Number of parallel processes to run
+
+    Returns:
+    new_df: if func returns an array then this is a numpy array with all the elements returned
+    OR None if func returns None and just does some calling.
     '''
-    import pandas as pd
-    import multiprocessing
-    import itertools
+
 
     # calculate the chunk size as an integer
     chunk_size = int(df.shape[0] / num_processes)
@@ -72,8 +86,6 @@ def parallel_df(df, func, func_args=(), num_processes=4):
 
     # apply our function to each chunk in the list
     result = pool.map(multi_run_wrapper, itertools.izip(itertools.repeat(func), chunks, itertools.repeat(func_args)))
-
-    # print result[0]
 
     new_df = pd.DataFrame()
     for i in result:
