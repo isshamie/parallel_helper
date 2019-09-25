@@ -51,7 +51,9 @@ def parallel_ar(ar, func, func_args=(), num_processes=4):
         return
 
     new_x = np.vstack(result).flatten() #Flatten out the results
-    pool.terminate()
+    
+    pool.close()
+    pool.join()
     return new_x
 
 
@@ -85,8 +87,13 @@ def parallel_df(df, func, func_args=(), num_processes=4):
     pool = multiprocessing.Pool(processes=num_processes)
 
     # apply our function to each chunk in the list
-    result = pool.map(multi_run_wrapper, itertools.izip(itertools.repeat(func), chunks, itertools.repeat(func_args)))
+    #itertools.izip removed in python 3, just use zip
+    result = pool.map(multi_run_wrapper, zip(itertools.repeat(func), chunks, itertools.repeat(func_args)))
+    
+    #result = pool.map(multi_run_wrapper, itertools.izip(itertools.repeat(func), chunks, itertools.repeat(func_args)))
 
+    if result[0] is None:
+        return
     new_df = pd.DataFrame()
     for i in result:
         # since i is just a dataframe
@@ -94,5 +101,8 @@ def parallel_df(df, func, func_args=(), num_processes=4):
         new_df = new_df.append(i)
         # print df.loc[result[i].index,:]
         # df.loc[result[i].index,:] = result[i]
-    pool.terminate()
+    
+    #pool.terminate()
+    pool.close()
+    pool.join()
     return new_df
