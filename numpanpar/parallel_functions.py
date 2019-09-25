@@ -3,8 +3,10 @@ import itertools
 import pandas as pd
 import numpy as np
 
+
 def multi_run_wrapper(args):
-    '''Runs a function in which the first argument is a numpy array.
+    '''
+    Runs a function in which the first argument is a numpy array.
     Input:
         args: List where first argument is the function,
               2nd is the argument, 

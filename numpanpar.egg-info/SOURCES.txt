@@ -1,0 +1,8 @@
+README.md
+setup.py
+numpanpar/__init__.py
+numpanpar/parallel_functions.py
+numpanpar.egg-info/PKG-INFO
+numpanpar.egg-info/SOURCES.txt
+numpanpar.egg-info/dependency_links.txt
+numpanpar.egg-info/top_level.txt

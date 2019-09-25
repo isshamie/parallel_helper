@@ -1,0 +1,18 @@
+Metadata-Version: 2.1
+Name: numpanpar
+Version: 0.1.0
+Summary: A numpy and pandas parallel utility package
+Home-page: UNKNOWN
+Author: Isaac Shamie
+License: MIT
+Description: # numpanpar
+        A wrapper for multiprocessing that helps pass arguments and operate 
+        on pandas dataframes and numpy arrays. 
+        
+        
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
